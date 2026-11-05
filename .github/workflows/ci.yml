@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile source and tests
+        run: python -m compileall -q src tests
+
+      - name: Run unit tests
+        run: pytest -q
+
+      - name: Validate dataset and preprocessing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from src.data import load_and_prepare_data
+
+          dataset = Path("data/powerplant_data.csv")
+          assert dataset.is_file(), f"Dataset missing: {dataset}"
+          prepared = load_and_prepare_data(dataset, batch_size=64, random_state=42)
+          sizes = prepared["split_sizes"]
+          assert sizes == {"train": 6697, "validation": 1435, "test": 1436}, sizes
+          batch_features, batch_targets = next(iter(prepared["train_loader"]))
+          assert batch_features.shape[1] == 4, batch_features.shape
+          assert batch_targets.shape[1] == 1, batch_targets.shape
+          print({"split_sizes": sizes, "batch_features": tuple(batch_features.shape)})
+          PY
