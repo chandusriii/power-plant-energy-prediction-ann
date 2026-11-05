@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1400" width="2000" height="1400" role="img" aria-labelledby="title desc">
+<title id="title">Power Plant Energy Prediction ANN — large detailed architecture and learning flow</title>
+<desc id="desc">Large-format neural network diagram showing the four input features, hidden layers, regression output, neuron calculations, MSE loss, backpropagation and Adam updates.</desc>
+<g transform="scale(1.25)">
+
 <title id="title">Power Plant Energy Prediction ANN — detailed architecture and learning flow</title>
 <desc id="desc">A fully connected feed-forward neural network with four standardized inputs, two six-neuron ReLU hidden layers, one linear output for predicted PE, mean squared error loss, and a backpropagation and Adam update loop.</desc>
 <defs>
@@ -87,4 +91,6 @@
 <path d="M995 930 V885" class="backward"/>
 <text x="1190" y="969" class="muted">Repeat for mini-batches and epochs</text>
 <text x="840" y="1030" class="small">Training objective: minimize Mean Squared Error (MSE).</text>
+
+</g>
 </svg>
