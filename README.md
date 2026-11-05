@@ -39,6 +39,16 @@ The baseline network follows the architecture in the original notebook:
 
 The output layer is linear for continuous regression.
 
+
+## Neural network architecture visualization
+
+The diagram below shows the actual layer sizes implemented in `src/model.py`. Each circle represents a neuron (the date-fruit diagram shows a compact schematic subset of the 34/64-wide layers so the connections remain readable).
+
+![Power Plant Energy Prediction ANN architecture](docs/ann_architecture.svg)
+
+**Layer dimensions:** `4 inputs → 6 → 6 → 1 output`
+
+
 ## Project structure
 
 ```text
