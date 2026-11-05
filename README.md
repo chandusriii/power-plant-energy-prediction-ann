@@ -42,40 +42,11 @@ The output layer is linear for continuous regression.
 
 ## Detailed neural network architecture
 
-This diagram follows the implemented `PowerPlantANN` model in `src/model.py` and shows all four inputs, both six-neuron hidden layers, the scalar output, and the training feedback loop.
+<p align="center">
+  <img src="docs/ann_architecture.svg" alt="Large detailed Power Plant ANN architecture showing the 4-6-6-1 network and training flow" width="100%" />
+</p>
 
-![Detailed Power Plant ANN architecture](docs/ann_architecture.svg)
-
-### Layer-by-layer structure
-
-| Stage | Size | Operation | Purpose |
-|---|---:|---|---|
-| Input | 4 | Standardized features: `AT`, `V`, `AP`, `RH` | Supplies environmental measurements |
-| Hidden layer 1 | 6 neurons | `Linear(4, 6)` + ReLU | Learns first-level feature combinations |
-| Hidden layer 2 | 6 neurons | `Linear(6, 6)` + ReLU | Learns further nonlinear combinations |
-| Output | 1 neuron | `Linear(6, 1)` | Predicts continuous electrical output `PE` |
-
-### Inside a fully connected layer
-
-For a layer, each neuron computes a weighted sum of its incoming values and adds a bias:
-
-```text
-z = W x + b
-a = ReLU(z) = max(0, z)
-```
-
-Here, `W` is the trainable weight matrix, `b` is the trainable bias vector, and `x` contains the input values or previous layer's activations. ReLU is applied after both hidden linear layers. The output layer is linear because this is a regression task and the prediction is a continuous value.
-
-### Forward propagation and learning
-
-1. **Forward pass:** the four standardized measurements pass through the two hidden layers to produce predicted `PE`.
-2. **Loss:** `nn.MSELoss()` compares predictions with the true target values.
-3. **Backpropagation:** `loss.backward()` computes gradients of the loss with respect to model parameters using the chain rule.
-4. **Parameter update:** the Adam optimizer applies those gradients to update the weights and biases.
-5. **Iteration:** training repeats over mini-batches and epochs. Validation MSE is monitored to select the best checkpoint.
-
-**Implementation note:** this is a schematic of the actual `4 → 6 → 6 → 1` PyTorch network. The lines represent fully connected pathways; individual learned weight values are stored in the trained checkpoint, not in this static diagram.
-
+The diagram below documents the implemented PyTorch model: four standardized environmental inputs, two six-neuron ReLU hidden layers, and one linear output neuron for predicted electrical output (`PE`).
 
 ## Project structure
 
